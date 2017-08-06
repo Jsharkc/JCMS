@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 九光年.
+ * Copyright (c) 2017 SmartestEE Co.,Ltd..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 /*
  * Revision History:
- *     Initial: 2017/07/21        九光年
+ *     Initial: 2017/07/21        Liu JiaChang
  */
 
 package main
