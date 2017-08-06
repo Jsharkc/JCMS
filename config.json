@@ -1,0 +1,13 @@
+{
+  "server": {
+    "address": ":7100",
+    "debug": true
+  },
+  "mongodb": {
+    "url": "mongodb://10.0.0.253:27018"
+  },
+  "session": {
+    "cookiename": "gosessionid",
+    "gclifetime": 3600
+  }
+}
