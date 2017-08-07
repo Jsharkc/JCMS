@@ -32,10 +32,15 @@ package handler
 import (
 	"github.com/labstack/echo"
 
+	"JCMS/config"
 	"JCMS/general"
 	"JCMS/general/errcode"
 	"JCMS/model"
 )
+
+type query struct {
+	ID string `json:id`
+}
 
 // Create create an article
 func Create(c echo.Context) error {
@@ -52,11 +57,59 @@ func Create(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrInvalidParams, err.Error())
 	}
 
-	uid := c.Get().(string)
-	err = model.ArticleServer.Create(*create, uid)
+	uid := c.Get(config.Configuration.JwtUid).(string)
+	err = model.ArticleServer.Create(&create, uid)
 	if err != nil {
 		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
 	}
 
 	return c.JSON(errcode.ErrSucceed, err.Error())
+}
+
+func GetArticleByID(c echo.Context) error {
+	var (
+		art model.Article
+		id  query
+		err error
+	)
+
+	if err = c.Bind(&id); err != nil {
+		return general.NewErrorWithMessage(errcode.ErrInvalidParams, err.Error())
+	}
+
+	art, err = model.ArticleServer.GetArticleByID(id.ID)
+	if err != nil {
+		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
+	}
+
+	return c.JSON(errcode.ErrSucceed, art)
+}
+
+func GetUserArticle(c echo.Context) error {
+	var (
+		list []model.Article
+		err  error
+	)
+
+	uid := c.Get(config.Configuration.JwtUid).(string)
+	list, err = model.ArticleServer.GetArticleByAuthor(uid)
+	if err != nil {
+		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
+	}
+
+	return c.JSON(errcode.ErrSucceed, list)
+}
+
+func GetAll(c echo.Context) error {
+	var (
+		list []model.Article
+		err  error
+	)
+
+	list, err = model.ArticleServer.GetAll()
+	if err != nil {
+		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
+	}
+
+	return c.JSON(errcode.ErrSucceed, list)
 }
