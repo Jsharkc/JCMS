@@ -93,7 +93,7 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 }
 
 // GetArticleByID return an Article{} and nil if id article exists
-func (as *ArticleServerProvider) GetArticleByID(id string) (Article, error) {
+func (as *ArticleServerProvider) GetArticleByID(id bson.ObjectId) (Article, error) {
 	var article Article
 
 	err := RefArticle.FindId(id).One(&article)
