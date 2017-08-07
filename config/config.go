@@ -31,7 +31,6 @@ package config
 
 import (
 	"github.com/spf13/viper"
-	"github.com/astaxie/beego/session"
 )
 
 type workServerConfig struct {
@@ -40,11 +39,12 @@ type workServerConfig struct {
 	MgoUrl                  string
 	CookieName              string
 	Gclifetime              int64
+	JwtUid                  string
+	JwtKey                  string
 }
 
 var (
 	Configuration *workServerConfig
-	GlobalSessions *session.Manager
 )
 
 func ReadConfiguration() {
@@ -61,5 +61,7 @@ func ReadConfiguration() {
 		MgoUrl:                 viper.GetString("mongodb.url"),
 		CookieName:             viper.GetString("session.cookiename"),
 		Gclifetime:             viper.GetInt64("session.gclifetime"),
+		JwtUid:                 viper.GetString("jwt.uid"),
+		JwtKey:                 viper.GetString("jwt.tokenkey"),
 	}
 }

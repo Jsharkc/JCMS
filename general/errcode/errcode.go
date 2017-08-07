@@ -32,14 +32,19 @@ package errcode
 const (
 	ErrSucceed				= 0x0
 	ErrInvalidParams		= 0x1
-	ErrDBFindNoState                = 0x2
-	ErrAddToDB                      = 0x3
+	ErrDBFindNoState        = 0x2
+	ErrAddToDB              = 0x3
 
 	// 需要登录
 	ErrLoginRequired		= 0x800
 	ErrPermissionDenied		= 0x801
 
+	ErrLoginPassErr = "用户名或密码错误！"
+
 	// 严重错误
 	ErrNoConnection			= 0x1000
 	ErrDBOperationFailed	= 0x1001
+
+	// jwt error
+	ErrJwtSignString        = 0x60
 )

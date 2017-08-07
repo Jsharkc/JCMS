@@ -46,7 +46,7 @@ const (
 )
 
 // 初始化 MongoDB 连接、文档类型初始化
-func InitMetal(url string) {
+func InitUserMD(url string) {
 	var err error
 	MDSession, err = mgo.DialWithTimeout(url + "/" + MDJCMS, time.Second)
 
