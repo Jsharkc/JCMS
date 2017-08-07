@@ -40,7 +40,11 @@ import (
 )
 
 type query struct {
+<<<<<<< HEAD
 	ID bson.ObjectId `json:id`
+=======
+	ID string `json:"id"`
+>>>>>>> d90c7ccd67ec0cb9d89e343fae01ccafdfb02faa
 }
 
 // Create create an article
