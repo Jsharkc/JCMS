@@ -30,46 +30,71 @@
 package model
 
 import (
-	"errors"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"GoTemp/mongo"
+	"JCMS/mongo"
+	"JCMS/utility"
 )
 
 type UserProvider struct{}
-
-type User struct {
-	UserId       bson.ObjectId   `bson:"_id,omitempty"  json:"id"`
-	UserName     string          `bson:"username"       json:"username" validate:"required"  validate:"gte=6, lte=15"`
-	PassWord     string          `bson:"password"       json:"password" validate:"required"  validate:" gte=6, lte=20"`
-}
 
 var (
 	UserService *UserProvider
 
 	// Collection
 	RefUser *mgo.Collection
-
-	UserError = errors.New("user not exist")
-	PassError = errors.New("password is error")
 )
 
 func PrepareUser() {
-	RefUser = mongo.MDSession.DB(mongo.MDGoTemp).C(mongo.User)
+	RefUser = mongo.MDSession.DB(mongo.MDJCMS).C(mongo.User)
+	nameIndex := mgo.Index{
+		Key:        []string{"username"},
+		Unique:     true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	if err := RefUser.EnsureIndex(nameIndex); err != nil {
+		panic(err)
+	}
+
 	UserService = &UserProvider{}
 }
 
-func(this *UserProvider) Login(username, password string ) error {
-	var pass User
+type User struct {
+	UserId       bson.ObjectId   `bson:"_id,omitempty"  json:"id"`
+	UserName     string          `bson:"name"           json:"username" validate:"required"  validate:"gte=6, lte=15"`
+	PassWord     string          `bson:"pass"           json:"password" validate:"required"  validate:" gte=6, lte=20"`
+}
 
-	if mongo.GetUniqueOne(RefUser, bson.M{"username": username}, &pass) != nil{
-		return UserError
+func(this *UserProvider) Login(username, pass string) error {
+	var user User
+
+	err := RefUser.Find(bson.M{"name": username}).One(&user)
+	if err != nil {
+		return "", err
 	}
-	
-	if pass.PassWord != password {
-		return  PassError
+
+	return user.PassWord, nil
+}
+
+func(this *UserProvider) Register(username, password string) error {
+	result, err := util.GenerateHash(password)
+	if err != nil {
+		return err
+	}
+
+	pass := string(result)
+	create := User{
+		UserId:     bson.NewObjectId(),
+		UserName:   username,
+		PassWord:   pass,
+	}
+
+	err = RefUser.Insert(&create)
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -33,10 +33,10 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
-	"GoTemp/general"
-	"GoTemp/router"
-	"GoTemp/config"
-	"GoTemp/initial"
+	"JCMS/general"
+	"JCMS/router"
+	"JCMS/config"
+	"JCMS/initial"
 )
 
 func main() {

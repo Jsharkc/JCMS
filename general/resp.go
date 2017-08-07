@@ -30,7 +30,7 @@
 package general
 
 import (
-	"GoTemp/general/errcode"
+	"JCMS/general/errcode"
 )
 
 type ErrorResp struct {

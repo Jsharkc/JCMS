@@ -32,7 +32,7 @@ package router
 import (
 	"github.com/labstack/echo"
 
-	"GoTemp/handler"
+	"JCMS/handler"
 )
 
 func InitRouter(e *echo.Echo) {

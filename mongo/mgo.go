@@ -33,7 +33,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"time"
 
-	"GoTemp/log"
+	"JCMS/log"
 )
 
 var (
@@ -41,20 +41,20 @@ var (
 )
 
 const (
-	MDGoTemp = "GoTemp"
+	MDJCMS = "JCMS"
 	User    = "user"
 )
 
 // 初始化 MongoDB 连接、文档类型初始化
 func InitMetal(url string) {
 	var err error
-	MDSession, err = mgo.DialWithTimeout(url + "/" + MDGoTemp, time.Second)
+	MDSession, err = mgo.DialWithTimeout(url + "/" + MDJCMS, time.Second)
 
 	if err != nil {
 		panic(err)
 	}
 
-	log.Logger.Debug("the MongoDB of %s connected!", MDGoTemp)
+	log.Logger.Debug("the MongoDB of %s connected!", MDJCMS)
 
 	// 尽可能利用 MongoDB 分布性特性
 	MDSession.SetMode(mgo.Monotonic, true)

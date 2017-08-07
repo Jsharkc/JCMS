@@ -33,8 +33,8 @@ import (
 	"net/http"
 	"github.com/labstack/echo"
 
-	"GoTemp/model"
-	"GoTemp/general"
+	"JCMS/model"
+	"JCMS/general"
 )
 
 func Login(c echo.Context) error {

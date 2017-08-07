@@ -30,9 +30,9 @@
 package initial
 
 import (
-	"GoTemp/model"
-	"GoTemp/config"
-	"GoTemp/mongo"
+	"JCMS/model"
+	"JCMS/config"
+	"JCMS/mongo"
 )
 
 var (
