@@ -39,7 +39,7 @@ import (
 )
 
 type query struct {
-	ID string `json:id`
+	ID string `json:"id"`
 }
 
 // Create create an article
