@@ -30,8 +30,9 @@
 package mongo
 
 import (
-	"gopkg.in/mgo.v2"
 	"time"
+
+	"gopkg.in/mgo.v2"
 
 	"JCMS/log"
 )
@@ -41,14 +42,15 @@ var (
 )
 
 const (
-	MDJCMS = "JCMS"
+	MDJCMS  = "JCMS"
 	User    = "user"
+	Article = "article"
 )
 
 // 初始化 MongoDB 连接、文档类型初始化
 func InitMetal(url string) {
 	var err error
-	MDSession, err = mgo.DialWithTimeout(url + "/" + MDJCMS, time.Second)
+	MDSession, err = mgo.DialWithTimeout(url+"/"+MDJCMS, time.Second)
 
 	if err != nil {
 		panic(err)
