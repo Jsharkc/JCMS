@@ -31,17 +31,24 @@ package handler
 
 import (
 	"net/http"
+
 	"github.com/labstack/echo"
+	jwt "github.com/dgrijalva/jwt-go"
 
 	"JCMS/model"
 	"JCMS/general"
+	"JCMS/general/errcode"
+	"JCMS/utility"
+	"JCMS/config"
+	"JCMS/log"
 )
 
+// Login user login
 func Login(c echo.Context) error {
-	var User struct {
-		Name  string `json:"username"  validate:"get=6, lte=15"`
-		Pass  string `json:"password"  validate:"gte=6, lte=30"`
-	}
+	var (
+		User        model.User
+		tokenStr    string
+	)
 
 	if err := c.Bind(&User); err != nil {
 		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
@@ -51,11 +58,60 @@ func Login(c echo.Context) error {
 		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
 	}
 
-	err := model.UserService.Login(User.Name, User.Pass)
+	pass, err := model.UserService.Login(User.UserName)
 
 	if err != nil {
 		return general.NewErrorWithMessage(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	if !util.CompareHash([]byte(pass), User.PassWord) {
+		return general.NewErrorWithMessage(errcode.ErrInvalidParams, errcode.ErrLoginPassErr)
+	}
+
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+	claims[config.Configuration.JwtUid] = User.UserId.Hex()
+
+	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
+		log.Logger.Error("Signe string error:", err)
+
+		return general.NewErrorWithMessage(errcode.ErrJwtSignString, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, tokenStr)
+}
+
+// Register user register
+func Register(c echo.Context) error {
+	var (
+		User        model.User
+		tokenStr    string
+		err         error
+	)
+
+	if err := c.Bind(&User); err != nil {
+		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(User); err != nil {
+		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
+	}
+
+	if err := model.UserService.Register(User.UserName, User.PassWord); err != nil {
+		return general.NewErrorWithMessage(http.StatusNotAcceptable, err.Error())
+	}
+
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+	claims[config.Configuration.JwtUid] = User.UserId.Hex()
+
+	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
+		log.Logger.Error("Signe string error:", err)
+
+		return general.NewErrorWithMessage(errcode.ErrJwtSignString, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, tokenStr)
 }

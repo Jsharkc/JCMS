@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 SmartestEE Co.,Ltd..
+ * Copyright (c) 2017 SmartestEE Co.,ltd..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,11 @@
 
 /*
  * Revision History:
- *     Initial: 2017/07/21        Liu JiaChang
+ *     Initial: 2017/08/07        Liu JiaChang
  */
 
-package orm
+package general
 
-type Pool interface {
-	GetConnection() (Connection, error)
-	ReleaseConnection(Connection)
-}
+const (
+	JwtClaimUid = "uid"
+)

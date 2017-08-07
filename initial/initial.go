@@ -41,7 +41,7 @@ var (
 
 func Initial() {
 	config.ReadConfiguration()
-	mongo.InitMetal(config.Configuration.MgoUrl)
+	mongo.InitUserMD(config.Configuration.MgoUrl)
 
 	model.PrepareUser()
 }

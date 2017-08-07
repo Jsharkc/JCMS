@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017 SmartestEE Co.,Ltd..
+ * Copyright (c) 2017 SmartestEE Co.,ltd..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,54 @@
 
 /*
  * Revision History:
- *     Initial: 2017/07/21        Liu JiaChang
+ *     Initial: 2017/08/07        Liu JiaChang
  */
 
-package orm
+package middleware
 
-type Connection interface {
-	Close() error
+
+import (
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo"
+
+	"JCMS/config"
+)
+
+var urlMap map[string]struct{}
+
+func CustomJWT() echo.MiddlewareFunc {
+	jwtconf := middleware.JWTConfig {
+		Skipper:     CustomSkipper,
+		SigningKey:  []byte(config.Configuration.JwtKey),
+	}
+
+	return middleware.JWTWithConfig(jwtconf)
+}
+
+func CustomSkipper(c echo.Context) bool {
+	if _, ok := urlMap[c.Request().RequestURI]; ok {
+		return true
+	}
+
+	return false
+}
+
+func init() {
+	urlMap = make(map[string]struct{})
+
+	urlMap["/login"] = struct{}{}
+	urlMap["/register"] = struct{}{}
+}
+
+func MustLoginIn(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		strUid := claims[config.Configuration.JwtUid].(string)
+
+		c.Set(config.Configuration.JwtUid, strUid)
+
+		return next(c)
+	}
 }

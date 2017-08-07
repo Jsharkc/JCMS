@@ -49,7 +49,7 @@ var (
 func PrepareUser() {
 	RefUser = mongo.MDSession.DB(mongo.MDJCMS).C(mongo.User)
 	nameIndex := mgo.Index{
-		Key:        []string{"username"},
+		Key:        []string{"name"},
 		Unique:     true,
 		Background: true,
 		Sparse:     true,
@@ -64,13 +64,14 @@ func PrepareUser() {
 
 type User struct {
 	UserId       bson.ObjectId   `bson:"_id,omitempty"  json:"id"`
-	UserName     string          `bson:"name"           json:"username" validate:"required"  validate:"gte=6, lte=15"`
-	PassWord     string          `bson:"pass"           json:"password" validate:"required"  validate:" gte=6, lte=20"`
+	UserName     string          `bson:"name"           json:"username" validate:"required"  validate:"gte=6, lte=20"`
+	PassWord     string          `bson:"pass"           json:"password" validate:"required"  validate:"gte=6, lte=20"`
 }
 
-func(this *UserProvider) Login(username, pass string) error {
+func(this *UserProvider) Login(username string) (string, error) {
 	var user User
 
+	mongo.MDSession.Refresh()
 	err := RefUser.Find(bson.M{"name": username}).One(&user)
 	if err != nil {
 		return "", err
@@ -92,6 +93,7 @@ func(this *UserProvider) Register(username, password string) error {
 		PassWord:   pass,
 	}
 
+	mongo.MDSession.Refresh()
 	err = RefUser.Insert(&create)
 	if err != nil {
 		return err
