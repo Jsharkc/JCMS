@@ -1,8 +1,10 @@
-hash: 3548dbedc69e870ca44848f6bad6cbb8b40253510c8c73a66f82c1cfe3bbf404
-updated: 2017-07-23T10:34:57.721982708+08:00
+hash: 070eec3b897ed0142b66e54c689cd6275772586944a2550538e919cb313aaf44
+updated: 2017-08-09T14:14:26.044646097+08:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
+- name: github.com/fengyfei/nuts
+  version: 2e676aa0551b10e7364a9993439b9686e402466d
 - name: github.com/fsnotify/fsnotify
   version: 4da3e2cfbabc9f751898f250b49f2439785783a1
 - name: github.com/go-playground/locales
@@ -75,6 +77,11 @@ imports:
   - zapcore
 - name: golang.org/x/crypto
   version: 9ef620b9ca2f82b55030ffd4f41327fa9e77a92c
+  subpackages:
+  - acme
+  - acme/autocert
+  - bcrypt
+  - blowfish
 - name: golang.org/x/sys
   version: 9a7256cb28ed514b4e1e5f68959914c4c28a92e0
   subpackages:
@@ -85,7 +92,7 @@ imports:
   - transform
   - unicode/norm
 - name: gopkg.in/go-playground/validator.v9
-  version: fb68f39656d7ebf8aa339ad4917aa0c260ecc237
+  version: d529ee1b0f30352444f507cc6cdac96bfd12decc
 - name: gopkg.in/mgo.v2
   version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
   subpackages:
