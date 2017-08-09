@@ -34,6 +34,7 @@ import (
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/fengyfei/nuts/mgo/refresh"
 
 	"JCMS/mongo"
 )
@@ -89,24 +90,23 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 		Created: time.Now(),
 	}
 
-	mongo.MDSession.Refresh()
-	return RefArticle.Insert(&article)
+	return refresh.Insert(mongo.MDSession, RefArticle, &article)
 }
 
 // GetArticleByID return an Article{} and nil if id article exists
-func (as *ArticleServerProvider) GetArticleByID(id bson.ObjectId) (Article, error) {
-	var article Article
+func (as *ArticleServerProvider) GetArticleByID(id bson.ObjectId) *Article {
+	var article *Article
 
-	err := RefArticle.FindId(id).One(&article)
+	refresh.GetByID(mongo.MDSession, RefArticle, id.Hex(), article)
 
-	return article, err
+	return article
 }
 
 //GetArticleByAuthor return []Article{} and nil if bd has any article written by authorID
 func (as *ArticleServerProvider) GetArticleByAuthor(authorID string) ([]Article, error) {
 	var article []Article
 
-	err := RefArticle.Find(bson.M{"author": authorID}).All(&article)
+	err := refresh.GetMany(mongo.MDSession, RefArticle, bson.M{"author": authorID}, &article)
 
 	return article, err
 }

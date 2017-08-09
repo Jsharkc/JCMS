@@ -70,7 +70,7 @@ func Create(c echo.Context) error {
 
 func GetArticleByID(c echo.Context) error {
 	var (
-		art model.Article
+		art *model.Article
 		id  query
 		err error
 	)
@@ -79,10 +79,7 @@ func GetArticleByID(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrInvalidParams, err.Error())
 	}
 
-	art, err = model.ArticleServer.GetArticleByID(id.ID)
-	if err != nil {
-		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
-	}
+	art = model.ArticleServer.GetArticleByID(id.ID)
 
 	return c.JSON(http.StatusOK, art)
 }

@@ -58,20 +58,20 @@ func Login(c echo.Context) error {
 		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
 	}
 
-	pass, err := model.UserService.Login(User.UserName)
+	user, err := model.UserService.Login(User.UserName)
 
 	if err != nil {
 		return general.NewErrorWithMessage(http.StatusInternalServerError, err.Error())
 	}
 
-	if !util.CompareHash([]byte(pass), User.PassWord) {
+	if !util.CompareHash([]byte(user.PassWord), User.PassWord) {
 		return general.NewErrorWithMessage(errcode.ErrInvalidParams, errcode.ErrLoginPassErr)
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims[config.Configuration.JwtUid] = User.UserId.Hex()
+	claims[config.Configuration.JwtUid] = user.UserId.Hex()
 
 	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
 		log.Logger.Error("Signe string error:", err)
@@ -86,6 +86,7 @@ func Login(c echo.Context) error {
 func Register(c echo.Context) error {
 	var (
 		User        model.User
+		userId      string
 		tokenStr    string
 		err         error
 	)
@@ -98,14 +99,14 @@ func Register(c echo.Context) error {
 		return general.NewErrorWithMessage(http.StatusBadRequest, err.Error())
 	}
 
-	if err := model.UserService.Register(User.UserName, User.PassWord); err != nil {
+	if userId, err = model.UserService.Register(User.UserName, User.PassWord); err != nil {
 		return general.NewErrorWithMessage(http.StatusNotAcceptable, err.Error())
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims[config.Configuration.JwtUid] = User.UserId.Hex()
+	claims[config.Configuration.JwtUid] = userId
 
 	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
 		log.Logger.Error("Signe string error:", err)

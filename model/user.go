@@ -68,22 +68,20 @@ type User struct {
 	PassWord     string          `bson:"pass"           json:"password" validate:"required"  validate:"gte=6, lte=20"`
 }
 
-func(this *UserProvider) Login(username string) (string, error) {
+func(this *UserProvider) Login(username string) (*User, error) {
 	var user User
 
 	mongo.MDSession.Refresh()
-	err := RefUser.Find(bson.M{"name": username}).One(&user)
-	if err != nil {
-		return "", err
-	}
 
-	return user.PassWord, nil
+	err := RefUser.Find(bson.M{"name": username}).One(&user)
+
+	return &user, err
 }
 
-func(this *UserProvider) Register(username, password string) error {
+func(this *UserProvider) Register(username, password string) (string, error) {
 	result, err := util.GenerateHash(password)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	pass := string(result)
@@ -96,8 +94,8 @@ func(this *UserProvider) Register(username, password string) error {
 	mongo.MDSession.Refresh()
 	err = RefUser.Insert(&create)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return create.UserId.Hex(), nil
 }
