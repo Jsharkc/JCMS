@@ -37,14 +37,11 @@ import (
 	"JCMS/general"
 	"JCMS/general/errcode"
 	"JCMS/model"
+	"net/http"
 )
 
 type query struct {
-<<<<<<< HEAD
-	ID bson.ObjectId `json:id`
-=======
-	ID string `json:"id"`
->>>>>>> d90c7ccd67ec0cb9d89e343fae01ccafdfb02faa
+	ID bson.ObjectId `json:"id"`
 }
 
 // Create create an article
@@ -68,7 +65,7 @@ func Create(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
 	}
 
-	return c.JSON(errcode.ErrSucceed, err.Error())
+	return c.JSON(http.StatusOK, nil)
 }
 
 func GetArticleByID(c echo.Context) error {
@@ -87,7 +84,7 @@ func GetArticleByID(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
 	}
 
-	return c.JSON(errcode.ErrSucceed, art)
+	return c.JSON(http.StatusOK, art)
 }
 
 func GetUserArticle(c echo.Context) error {
@@ -102,7 +99,7 @@ func GetUserArticle(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
 	}
 
-	return c.JSON(errcode.ErrSucceed, list)
+	return c.JSON(http.StatusOK, list)
 }
 
 func GetAll(c echo.Context) error {
@@ -116,5 +113,5 @@ func GetAll(c echo.Context) error {
 		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
 	}
 
-	return c.JSON(errcode.ErrSucceed, list)
+	return c.JSON(http.StatusOK, list)
 }

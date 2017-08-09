@@ -33,6 +33,7 @@ import (
 	"github.com/labstack/echo"
 
 	"JCMS/handler"
+	"JCMS/middleware"
 )
 
 func InitRouter(e *echo.Echo) {
@@ -43,8 +44,8 @@ func InitRouter(e *echo.Echo) {
 	e.POST("/login", handler.Login)
 	e.POST("/register", handler.Register)
 
-	e.POST("/article/create", handler.Create)
-	e.POST("/article/one", handler.GetArticleByID)
-	e.GET("/article/user", handler.GetUserArticle)
-	e.GET("/article/all", handler.GetAll)
+	e.POST("/article/create", handler.Create, middleware.MustLoginIn)
+	e.POST("/article/one", handler.GetArticleByID, middleware.MustLoginIn)
+	e.GET("/article/user", handler.GetUserArticle, middleware.MustLoginIn)
+	e.GET("/article/all", handler.GetAll, middleware.MustLoginIn)
 }

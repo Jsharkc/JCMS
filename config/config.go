@@ -37,8 +37,6 @@ type workServerConfig struct {
 	Address			        string
 	IsDebug			        bool
 	MgoUrl                  string
-	CookieName              string
-	Gclifetime              int64
 	JwtUid                  string
 	JwtKey                  string
 }
@@ -59,8 +57,6 @@ func ReadConfiguration() {
 		Address:		        viper.GetString("server.address"),
 		IsDebug:		        viper.GetBool("server.debug"),
 		MgoUrl:                 viper.GetString("mongodb.url"),
-		CookieName:             viper.GetString("session.cookiename"),
-		Gclifetime:             viper.GetInt64("session.gclifetime"),
 		JwtUid:                 viper.GetString("jwt.uid"),
 		JwtKey:                 viper.GetString("jwt.tokenkey"),
 	}

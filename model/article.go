@@ -49,8 +49,8 @@ var (
 func PrepareArticle() {
 	RefArticle = mongo.MDSession.DB(mongo.MDJCMS).C(mongo.Article)
 	nameIndex := mgo.Index{
-		Key:        []string{"id"},
-		Unique:     true,
+		Key:        []string{"author"},
+		Unique:     false,
 		Background: true,
 		Sparse:     true,
 	}
@@ -73,8 +73,8 @@ type Article struct {
 
 // Create use for create an article
 type Create struct {
-	Title   string   `json:"title"   validate:"gte=6,lte=20"`
-	Content string   `json:"content" validate:"gte=6,lte=500"`
+	Title   string   `json:"title"   validate:"gte=6,lte=100"`
+	Content string   `json:"content" validate:"gte=6,lte=5000"`
 	Images  []string `json:"images"`
 }
 
@@ -89,6 +89,7 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 		Created: time.Now(),
 	}
 
+	mongo.MDSession.Refresh()
 	return RefArticle.Insert(&article)
 }
 

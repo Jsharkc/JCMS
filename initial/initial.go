@@ -44,4 +44,5 @@ func Initial() {
 	mongo.InitUserMD(config.Configuration.MgoUrl)
 
 	model.PrepareUser()
+	model.PrepareArticle()
 }
