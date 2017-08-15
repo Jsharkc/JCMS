@@ -41,6 +41,11 @@ import (
 	"JCMS/utility"
 	"JCMS/config"
 	"JCMS/log"
+	"time"
+)
+
+const (
+	jwtClaimExpire = "exp"
 )
 
 // Login user login
@@ -72,6 +77,7 @@ func Login(c echo.Context) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims[config.Configuration.JwtUid] = user.UserId.Hex()
+	claims[jwtClaimExpire] = time.Now().Add(time.Hour * time.Duration(config.Configuration.JwtExp)).Unix()
 
 	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
 		log.Logger.Error("Signe string error:", err)
@@ -107,6 +113,7 @@ func Register(c echo.Context) error {
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims[config.Configuration.JwtUid] = userId
+	claims[jwtClaimExpire] = time.Now().Add(time.Hour * time.Duration(config.Configuration.JwtExp)).Unix()
 
 	if tokenStr, err = token.SignedString([]byte(config.Configuration.JwtKey)); err != nil {
 		log.Logger.Error("Signe string error:", err)

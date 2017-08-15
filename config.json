@@ -8,6 +8,7 @@
   },
   "jwt": {
     "uid": "userid",
+    "exp": 48,
     "tokenkey": "fj29yt9erhnt29"
   }
 }

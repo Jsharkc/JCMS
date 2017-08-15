@@ -38,6 +38,7 @@ type workServerConfig struct {
 	IsDebug			        bool
 	MgoUrl                  string
 	JwtUid                  string
+	JwtExp                  int
 	JwtKey                  string
 }
 
@@ -58,6 +59,7 @@ func ReadConfiguration() {
 		IsDebug:		        viper.GetBool("server.debug"),
 		MgoUrl:                 viper.GetString("mongodb.url"),
 		JwtUid:                 viper.GetString("jwt.uid"),
+		JwtExp:                 viper.GetInt("jwt.exp"),
 		JwtKey:                 viper.GetString("jwt.tokenkey"),
 	}
 }

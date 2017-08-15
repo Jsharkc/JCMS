@@ -31,7 +31,6 @@ package handler
 
 import (
 	"github.com/labstack/echo"
-	"gopkg.in/mgo.v2/bson"
 
 	"JCMS/config"
 	"JCMS/general"
@@ -41,7 +40,7 @@ import (
 )
 
 type query struct {
-	ID bson.ObjectId `json:"id"`
+	ID string `json:"id"`
 }
 
 // Create create an article

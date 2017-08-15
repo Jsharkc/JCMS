@@ -55,6 +55,7 @@ func PrepareArticle() {
 		Background: true,
 		Sparse:     true,
 	}
+
 	if err := RefArticle.EnsureIndex(nameIndex); err != nil {
 		panic(err)
 	}
@@ -68,7 +69,6 @@ type Article struct {
 	Title   string        `json:"title"`
 	Content string        `json:"content"`
 	Author  string        `json:"author"`
-	Images  []string      `json:"images"`
 	Created time.Time     `json:"created"`
 }
 
@@ -76,7 +76,6 @@ type Article struct {
 type Create struct {
 	Title   string   `json:"title"   validate:"gte=6,lte=100"`
 	Content string   `json:"content" validate:"gte=6,lte=5000"`
-	Images  []string `json:"images"`
 }
 
 // Create create an article and return nil if it success
@@ -86,7 +85,6 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 		Title:   c.Title,
 		Content: c.Content,
 		Author:  author,
-		Images:  c.Images,
 		Created: time.Now(),
 	}
 
@@ -94,10 +92,10 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 }
 
 // GetArticleByID return an Article{} and nil if id article exists
-func (as *ArticleServerProvider) GetArticleByID(id bson.ObjectId) *Article {
+func (as *ArticleServerProvider) GetArticleByID(id string) *Article {
 	var article *Article
 
-	refresh.GetByID(mongo.MDSession, RefArticle, id.Hex(), article)
+	refresh.GetByID(mongo.MDSession, RefArticle, id, &article)
 
 	return article
 }
