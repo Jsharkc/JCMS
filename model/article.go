@@ -66,7 +66,9 @@ func PrepareArticle() {
 // Article contain all article information
 type Article struct {
 	ID      bson.ObjectId `bson:"_id" json:"id"`
+	Status  bool          `json:"status"`
 	Title   string        `json:"title"`
+	Thumb   string        `json:"thumb"`
 	Content string        `json:"content"`
 	Author  string        `json:"author"`
 	Created time.Time     `json:"created"`
@@ -74,21 +76,36 @@ type Article struct {
 
 // Create use for create an article
 type Create struct {
+	Status  bool     `json:"status"`
 	Title   string   `json:"title"   validate:"gte=6,lte=100"`
+	Thumb   string   `json:"thumb"   validate:"url"`
 	Content string   `json:"content" validate:"gte=6,lte=5000"`
+}
+
+// Modify use for modify article status
+type Modify struct {
+	ID      string      `json:"id"          validate:"required"`
+	Status  bool        `json:"status"`
 }
 
 // Create create an article and return nil if it success
 func (as *ArticleServerProvider) Create(c *Create, author string) error {
 	article := Article{
 		ID:      bson.NewObjectId(),
+		Status:  true,
 		Title:   c.Title,
+		Thumb:   c.Thumb,
 		Content: c.Content,
 		Author:  author,
 		Created: time.Now(),
 	}
 
 	return refresh.Insert(mongo.MDSession, RefArticle, &article)
+}
+
+// ModifyStatus modify article status
+func (as *ArticleServerProvider) ModifyStatus(id string, status bool) error {
+	return refresh.Update(mongo.MDSession, RefArticle, bson.M{"_id": bson.ObjectIdHex(id)}, bson.M{"$set": bson.M{"status", status}})
 }
 
 // GetArticleByID return an Article{} and nil if id article exists

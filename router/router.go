@@ -41,11 +41,14 @@ func InitRouter(e *echo.Echo) {
 		panic("[InitRouter], server couldn't be nil")
 	}
 
+	// user
 	e.POST("/login", handler.Login)
 	e.POST("/register", handler.Register)
 
+	// article
 	e.POST("/article/create", handler.Create, middleware.MustLoginIn)
-	e.POST("/article/one", handler.GetArticleByID, middleware.MustLoginIn)
+	e.POST("/article/one", handler.GetArticleByID)
+	e.POST("/article/modify", handler.ModifyStatus)
 	e.GET("/article/user", handler.GetUserArticle, middleware.MustLoginIn)
-	e.GET("/article/all", handler.GetAll, middleware.MustLoginIn)
+	e.GET("/article/all", handler.GetAll)
 }

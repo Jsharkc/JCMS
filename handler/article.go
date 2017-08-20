@@ -30,13 +30,14 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo"
 
 	"JCMS/config"
 	"JCMS/general"
 	"JCMS/general/errcode"
 	"JCMS/model"
-	"net/http"
 )
 
 type query struct {
@@ -67,6 +68,30 @@ func Create(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
+// ModifyStatus modify article status
+func ModifyStatus(c echo.Context) error {
+	var (
+		modify model.Modify
+		err    error
+	)
+
+	if err = c.Bind(&modify); err != nil {
+		return general.NewErrorWithMessage(errcode.ErrInvalidParams, err.Error())
+	}
+
+	if err = c.Validate(modify); err != nil {
+		return general.NewErrorWithMessage(errcode.ErrInvalidParams, err.Error())
+	}
+
+	err = model.ArticleServer.ModifyStatus(modify.ID, modify.Status)
+	if err != nil {
+		return general.NewErrorWithMessage(errcode.ErrDBOperationFailed, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+// GetArticleByID get article by id
 func GetArticleByID(c echo.Context) error {
 	var (
 		art *model.Article
@@ -83,6 +108,7 @@ func GetArticleByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, art)
 }
 
+// GetUserArticle get article by user id
 func GetUserArticle(c echo.Context) error {
 	var (
 		list []model.Article
@@ -98,6 +124,7 @@ func GetUserArticle(c echo.Context) error {
 	return c.JSON(http.StatusOK, list)
 }
 
+// GetAll get all article
 func GetAll(c echo.Context) error {
 	var (
 		list []model.Article
