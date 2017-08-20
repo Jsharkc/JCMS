@@ -47,8 +47,8 @@ func InitRouter(e *echo.Echo) {
 
 	// article
 	e.POST("/article/create", handler.Create, middleware.MustLoginIn)
-	e.POST("/article/one", handler.GetArticleByID)
 	e.POST("/article/modify", handler.ModifyStatus)
+	e.POST("/article/one", handler.GetArticleByID)
 	e.GET("/article/user", handler.GetUserArticle, middleware.MustLoginIn)
 	e.GET("/article/all", handler.GetAll)
 }

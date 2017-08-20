@@ -105,7 +105,7 @@ func (as *ArticleServerProvider) Create(c *Create, author string) error {
 
 // ModifyStatus modify article status
 func (as *ArticleServerProvider) ModifyStatus(id string, status bool) error {
-	return refresh.Update(mongo.MDSession, RefArticle, bson.M{"_id": bson.ObjectIdHex(id)}, bson.M{"$set": bson.M{"status", status}})
+	return refresh.Update(mongo.MDSession, RefArticle, bson.M{"_id": bson.ObjectIdHex(id)}, bson.M{"$set": bson.M{"status": status}})
 }
 
 // GetArticleByID return an Article{} and nil if id article exists

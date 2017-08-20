@@ -37,14 +37,15 @@ import (
 	"JCMS/router"
 	"JCMS/config"
 	"JCMS/initial"
-	//middle "JCMS/middleware"
+	middle "JCMS/middleware"
 )
 
 func main() {
 	server := echo.New()
 
 	server.Use(middleware.Recover())
-	//server.Use(middle.CustomJWT())
+	server.Use(middleware.Logger())
+	server.Use(middle.CustomJWT())
 
 	server.HTTPErrorHandler = general.EchoRestfulErrorHandler
 	server.Validator = general.NewEchoValidator()

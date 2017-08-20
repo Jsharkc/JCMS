@@ -62,6 +62,8 @@ func init() {
 
 	urlMap["/login"] = struct{}{}
 	urlMap["/register"] = struct{}{}
+	urlMap["/article/all"] = struct{}{}
+	urlMap["/article/one"] = struct{}{}
 }
 
 func MustLoginIn(next echo.HandlerFunc) echo.HandlerFunc {
